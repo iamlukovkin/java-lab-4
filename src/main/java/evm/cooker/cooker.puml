@@ -1,0 +1,116 @@
+@startuml
+
+interface Edible {
+    float getCalories();
+}
+
+abstract class Meal implements Edible {
+    - float calories;
+    - String name;
+    + Meal(String, float);
+    + getName(): String;
+    + getCalories(): float;
+}
+
+class Salad extends Meal {
+    - ArrayList<Vegetable> vegetables;
+    + Salad(String, ArrayList<Vegetable>);
+    + getVegetables(): ArrayList<Vegetable>;
+    + setVegetables(ArrayList<Vegetable>);
+    - setCalories();
+}
+
+Salad *--> Vegetable
+
+enum SortCharacteristic {
+    NAME,
+    CALORIES
+    String toString();
+}
+
+class Vegetable extends Meal {
+    - VegetableType vegetableType;
+    + Vegetable(VegetableType, float);
+    + getVegetableType(): VegetableType;
+}
+
+VegetableType *--> Vegetable
+
+enum VegetableType {
+    + CUCUMBER,
+    + TOMATO,
+    + ONION,
+    + BROCCOLI,
+    + CARROT;
+    - String name;
+    - float calories;
+    VegetableType(String, float);
+    + getName(): String;
+    + getCalories(): float;
+    + getVegetableType(String name): VegetableType;
+}
+
+abstract class MealFactory {
+    - getName(): String;
+}
+
+interface ICreate<Item> {
+    + create() : Item
+    + createDefault() : Item
+}
+
+class SaladFactory extends MealFactory implements ICreate {
+    - VegetableFactory vegetableFactory;
+    + create() : Salad
+    + createDefault() : Salad
+    + makeVegetable(): Vegetable
+}
+
+class VegetableFactory extends MealFactory implements ICreate {
+    - create() : Vegetable
+    - createDefault() : Vegetable
+    - getStringNames(): String
+}
+
+VegetableFactory -> Vegetable
+SaladFactory --> Vegetable
+SaladFactory *-> VegetableFactory
+SaladFactory -> Salad
+
+interface ISalad {
+    sortVegetables(Salad, SortCharacteristic) : ArrayList<Vegetable>
+    findVegetablesByCaloriesRange(ArrayList<Vegetable>, float, float) : ArrayList<Vegetable>
+}
+
+class SaladController implements ISalad {
+    - SaladFactory saladFactory;
+    + Salad makeSalad();
+    + sortVegetables(Salad, SortCharacteristic) : ArrayList<Vegetable> ;
+    + findVegetablesByCaloriesRange(ArrayList<Vegetable>, float, float) : ArrayList<Vegetable>
+    - sortByName(ArrayList<Vegetable>) : ArrayList<Vegetable>
+    - sortByCalories(ArrayList<Vegetable>) : ArrayList<Vegetable>
+}
+
+SaladController *-> SortCharacteristic
+SaladController *-> SaladFactory
+SaladController --> Salad
+
+interface ISaladView {
+    displayVegetables(ArrayList<Vegetable>) : String
+    makeSalad(Salad) : String
+    calculateCalories(ArrayList<Vegetable>) : String
+    sortVegetables(Salad, SortCharacteristic) : String
+    findVegetablesByCaloriesRange(ArrayList<Vegetable>, float, float) : String
+}
+
+class SaladView implements ISaladView {
+    + displayVegetables(ArrayList<Vegetable>) : String
+    + makeSalad(Salad) : String
+    + calculateCalories(ArrayList<Vegetable>) : String
+    + sortVegetables(Salad, SortCharacteristic) : String
+    + findVegetablesByCaloriesRange(ArrayList<Vegetable>, float, float) : String
+    + displaySalad(Salad) : String
+    + sortCharacteristics() : String
+}
+
+@enduml

@@ -1,0 +1,147 @@
+@startuml
+
+class FactoryManager {
+    - FactoryManager instance;
+    + FactoryManager getInstance()
+    + EngineFactory getEngineFactory()
+    + WingFactory getWingFactory()
+    + WheelFactory getWheelFactory()
+    + RoadTrackFactory getRoadTrackFactory()
+    + PlaneFactory getPlaneFactory()
+}
+
+interface ICreate<Item> {
+    + create() : Item
+    + createDefault() : Item
+}
+
+interface IPlaneController {
+    + displayRoadTrack(Plane) : void
+    + fly(Plane) : void
+    + setRoadTrack(Plane, RoadTrack) : void
+}
+
+class PlaneController implements IPlaneController {
+    + displayRoadTrack(Plane) : void
+    + fly(Plane) : void
+    + setRoadTrack(Plane, RoadTrack) : void
+}
+
+class RoadTrackFactory implements ICreate {
+   + create() : RoadTrack
+   + createDefault() : RoadTrack
+}
+
+RoadTrackFactory -> RoadTrack
+RoadTrackFactory -> RoadTrack
+
+class WheelFactory implements ICreate {
+   + create() : Wheel
+   + Item createDefault() : Wheel
+}
+
+WheelFactory -> Wheel
+WheelFactory -> Wheel
+
+class WingFactory implements ICreate {
+   + create() : Wing
+   + createDefault() : Wing
+}
+
+WingFactory -> Wing
+WingFactory -> Wing
+
+class EngineFactory implements ICreate {
+   + create() : Engine
+   + createDefault() : Engine
+}
+
+EngineFactory -> Engine
+EngineFactory -> Engine
+
+class PlaneFactory implements ICreate {
+   + create() : Plane
+   + createDefault() : Plane
+   + makeName() : String
+   + makeWheels(boolean) : ArrayList<Wheel>
+   + makeWings(boolean) : ArrayList<Wing>
+}
+
+PlaneFactory -> Plane
+PlaneFactory -> Plane
+
+class Plane {
+   - String name;
+   - ArrayList<Wheel> wheels;
+   - ArrayList<Wing> wings;
+   - Engine engine;
+   - RoadTrack roadTrack;
+   + Plane(String, ArrayList<Wheel>, ArrayList<Wing>, Engine, RoadTrack)
+   + equals(Object) : boolean
+   + toString() : String
+   + hashCode() : int
+}
+
+class Detail {
+   - String name;
+   - float wearOut;
+   + Detail(String, float)
+   + equals(Object) : boolean
+   + toString() : String
+   + hashCode() : int
+   + use() : void
+}
+
+class Engine {
+   - float maxPower;
+   + Engine(String, float)
+   + Engine(String, float, float)
+   + getMaxPower() : float
+}
+
+class Wing {
+   - float length;
+   + Wing(String, float)
+   + Wing(String, float, float)
+   + getLength() : float
+}
+
+class Wheel {
+   - float diameter;
+   + Wheel(String, float)
+   + Wheel(String, float, float)
+   + getDiameter() : float
+}
+class RoadTrack {
+    - String source;
+    - String destination;
+    + RoadTrack(String, String)
+    + RoadTrack(String, String)
+    + getSource() : String
+    + getDestination() : String
+    + setCoordinates(String, String) : void
+}
+
+interface IPlaneView {
+    + displayRoadTrack(Plane) : void
+    + fly(Plane) : void
+}
+
+class PlaneView implements IPlaneView {
+    + displayRoadTrack(Plane) : void
+    + fly(Plane) : void
+}
+
+Detail *-> Wing
+Detail *-> Wheel
+Detail *-> Engine
+
+FactoryManager --> EngineFactory
+FactoryManager --> WingFactory
+FactoryManager --> WheelFactory
+FactoryManager --> RoadTrackFactory
+FactoryManager --> PlaneFactory
+
+PlaneController --> Plane
+
+@enduml

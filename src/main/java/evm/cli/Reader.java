@@ -28,12 +28,27 @@ public class Reader implements IReader {
     @Override
     public int readInteger(String message) {
         System.out.println(message);
-        return scanner.nextInt();
+        try {
+            return scanner.nextInt();
+        } catch (Exception e) {
+            handleInterrupt();
+            return readInteger(message);
+        }
     }
 
     @Override
     public float readFloat(String message) {
         System.out.println(message);
-        return scanner.nextFloat();
+        try {
+            return scanner.nextFloat();
+        } catch (Exception e) {
+            handleInterrupt();
+            return readFloat(message);
+        }
+    }
+
+    private void handleInterrupt() {
+        System.out.println("Введено некорректное значение");
+        scanner.next();
     }
 }
